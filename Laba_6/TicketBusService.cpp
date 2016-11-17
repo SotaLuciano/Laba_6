@@ -1,20 +1,20 @@
 #include "TicketBusService.h"
 #define convertToString(x) #x
 
-TicketBusService::TicketBusService() :TicketBusService(0,0,0,0,0,"",0,0)
+TicketBusService::TicketBusService() :TicketBusService(0,0,0,0,0,"",0,"")
 {
 	passanger = "passanger";
 	AmountOfTicketService++;
 }
 
-TicketBusService::TicketBusService(double StartWorking_, double EndWorking_, int SaleNumber_, int TotalMoney_, int Price_, string Trip_, int AmountOfPaper_, double CurrentTime_):MainTicketService( TotalMoney_, Price_, Trip_, StartWorking_, EndWorking_, SaleNumber_)
+TicketBusService::TicketBusService(double StartWorking_, double EndWorking_, int SaleNumber_, int TotalMoney_, int Price_, string Trip_, int AmountOfPaper_, string CurrentTime_):MainTicketService( TotalMoney_, Price_, Trip_, StartWorking_, EndWorking_, SaleNumber_)
 {
 
 	int AmountOfPaper = AmountOfPaper_;
 	SoldTickets = new int[AmountOfPaper];
 	AmountOfRefundable = 0;
 	NumberOfRefundable = new int[AmountOfPaper];
-	CurrentTime = CurrentTime_;
+	CurrentTime.assign(CurrentTime_);
 }
 
 TicketBusService::TicketBusService(const TicketBusService &temp)
@@ -41,7 +41,7 @@ TicketBusService::TicketBusService(const TicketBusService &temp)
 	}
 	AmountOfRefundable = temp.AmountOfRefundable;
 	passanger.assign(temp.passanger);
-	CurrentTime = temp.CurrentTime;
+	CurrentTime.assign(temp.CurrentTime);
 }
 
 void TicketBusService::InputInfo(string Trip_, int SaleNumber_, double StartWorking_, double EndWorking_)
@@ -51,9 +51,9 @@ void TicketBusService::InputInfo(string Trip_, int SaleNumber_, double StartWork
 	StartWorking = StartWorking_;
 	EndWorking = EndWorking_;
 
-	cout << "Input Current time: ";
-	cin >> CurrentTime;
-	while (cin.get() != '\n');
+	//string ctime = date_time_selling();
+	//CurrentTime = ctime;
+
 	cout << "Input Price: ";
 	cin >> Price;
 
@@ -149,16 +149,7 @@ void TicketBusService::Sale(string Trip_)
 
 void TicketBusService::Sale()
 {
-
-	if (CurrentTime > StartWorking && CurrentTime < EndWorking)
-	{
 		Sale(Trip);
-	}
-	else
-	{
-		cout << "Sorry, we don't working now. Come later!\n";
-		return;
-	}
 }
 
 void TicketBusService::Print()
@@ -173,7 +164,7 @@ void TicketBusService::Print()
 	cout << "------------------------------------------------" << endl;
 	cout << "Ticket Number: " << TicketNumber << endl;
 	cout << "------------------------------------------------" << endl;
-	cout << "Time sold: " << CurrentTime << ".00" << endl;
+	cout << "Time sold: " << CurrentTime << endl;
 }
 
 void PutInFileRefundableTickets(int TicketNumber_)
@@ -251,7 +242,7 @@ string TicketBusService::Obj_To_Str()
 	tmp1 = to_string(AmountOfRefundable);
 	Object += tmp1 + tmp;
 
-	tmp1 = to_string(CurrentTime);
+	tmp1 = CurrentTime;
 	Object += tmp1;
 	return Object;
 }
@@ -290,7 +281,7 @@ void TicketBusService::Str_To_Obj(string Obj_)
 		counter++;
 	}
 	AmountOfRefundable = stoi(arr[amount]);
-	CurrentTime = atoi(arr[i].c_str());
+	CurrentTime = arr[i];
 }
 
 bool operator>(TicketBusService& tmp1, TicketBusService& tmp2)

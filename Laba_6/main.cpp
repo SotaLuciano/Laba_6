@@ -1,49 +1,53 @@
 #include "TicketBusService.h"
 
-void Sort_Obj(Amount_Of_Ticket_Service **AB, int size)
+string date_time_selling()
 {
-
-	int tmp, tmp1;
-	for (int i(1); i < size; i++)
-	{
-		for (int j(0); j < (size - i); j++)
-		{
-			if (AB[j] < AB[j + 1])
-			{
-				tmp = AB[j]->GetMoney();
-				tmp1 = AB[j + 1]->GetMoney();
-				AB[j]->SetMoney(tmp1);
-				AB[j + 1]->SetMoney(tmp);
-			}
-		}
-	}
+	char* a = new char[30];
+	time_t t = time(0);
+	struct tm * now = localtime(&t);
+	sprintf(a, "%02d:%02d:%02d %02d.%02d.%4d", now->tm_hour, now->tm_min, now->tm_sec, now->tm_mday, now->tm_mon + 1, now->tm_year + 1900);
+	string my_row(a);
+	return my_row;
 }
 
 void main()
 {
 	//Тестування сортування + множинне наслідування
-	Amount_Of_Ticket_Service **TS = new Amount_Of_Ticket_Service*[5];
-	for (int i(0); i < 5; i++)
-	{
-		TS[i] = new TicketBusService();
-	}
+	TicketBusService TS[3];
 	int Money;
-	for (int k(0); k < 5; k++)
+	for (int k(0); k < 3; k++)
 	{
 		cout << "Enter " << k << " object Total money: ";
 		cin >> Money;
-		TS[k]->SetMoney(Money);
+		TS[k].SetMoney(Money);
 	}
-	Sort_Obj(TS, 5);
-	int tmp;
-	for (int i(0); i < 5; i++)
+	TicketBusService tmp;
+	//Сортування
+	for (int i = 0; i <3 - 1; ++i) 
 	{
-		tmp = TS[i]->GetMoney();
-		cout << tmp << endl;
+		for (int j = 0; j < 3 - 1; ++j)
+		{
+			if (TS[j + 1] < TS[j])
+			{
+				tmp = TS[j + 1];
+				TS[j + 1] = TS[j];
+				TS[j] = tmp;
+			}
+		}
 	}
+	int temp;
+	//вивід
+	for (int k(0); k < 3; k++)
+	{
+		temp = TS[k].GetMoney();
+		cout << temp << endl;
+	}
+	
 	//Тестування конвертування
 	TicketBusService A;
 	A.InputInfo("Lviv-Paris", 428, 8.00, 20.00);
+	string time = date_time_selling();
+	A.SetCurrentTime(time);
 	A.Sale();
 	A.GetAmountOfTicketService();
 	string K = A.Obj_To_Str();

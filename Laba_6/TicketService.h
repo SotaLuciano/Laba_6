@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include "Amount_Of_Ticket_Service.h"
+#include "Converting.h"
 
 using namespace std;
 class TicketService: public Amount_Of_Ticket_Service
